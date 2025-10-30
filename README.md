@@ -21,7 +21,7 @@ Manually parse query parameters inside the `afterConnectionEstablished` method:
 public void afterConnectionEstablished(WebSocketSession session) throws Exception {
     URI uri = session.getUri();
     if (uri != null) {
-        String query = uri.getQuery(); // e.g., userId=123&userName=Alice
+        String query = uri.getQuery(); // e.g., userId=123&userName=Mohacel
         Map<String, String> params = Arrays.stream(query.split("&"))
             .map(s -> s.split("="))
             .collect(Collectors.toMap(a -> a[0], a -> a[1]));
