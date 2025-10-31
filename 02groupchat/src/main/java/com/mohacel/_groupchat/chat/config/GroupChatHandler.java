@@ -89,6 +89,8 @@ public class GroupChatHandler implements WebSocketHandler {
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         if(message instanceof PongMessage){
             lastPongMap.put(session.getId(), System.currentTimeMillis());
+            ByteBuffer pongPayload = ((PongMessage) message).getPayload();
+            logger.info("PONG received with payload: {}", new String(pongPayload.array()));
             return;
         }
 
@@ -188,8 +190,9 @@ public class GroupChatHandler implements WebSocketHandler {
         for(WebSocketSession session : new ArrayList<>(userSession.values())){
             if (!session.isOpen()) continue;
 
+            // new PingMessage() | empty obj works fine, payload is optional, payload only for log purpose
             try {
-                session.sendMessage(new PingMessage(ByteBuffer.wrap("ping".getBytes())));
+                session.sendMessage(new PingMessage(ByteBuffer.wrap(("ping-" + session.getId()).getBytes())));
                 logger.debug("Sent PING to {}", session.getId());
             } catch (IOException e) {
                 logger.error("Ping failed: {}", e.getMessage());
